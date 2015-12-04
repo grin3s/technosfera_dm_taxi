@@ -21,6 +21,7 @@ root_group = h5file.root
 table = h5file.create_table(root_group, 'fares', TripFare, "Trip Fares")
 row = table.row
 
+i = 1
 for line in F:
     medallion, hack_license, vendor_id, pickup_datetime, payment_type, fare_amount, surcharge, mta_tax, tip_amount, tolls_amount, total_amount = line.split(',')
     row["medallion"] = medallion
@@ -34,3 +35,15 @@ for line in F:
     row["tip_amount"] = tip_amount
     row["tolls_amount"] = tolls_amount
     row["total_amount"] = total_amount
+
+    row.append()
+
+    if i % 100000 == 0:
+        table.flush()
+        print "Row {0} saved".format(i)
+
+    i += 1
+
+table.flush()
+F.close()
+h5file.close()
